@@ -1,0 +1,16 @@
+{
+    "manifest_version": 3,
+    "name": "ChatGPT Saved Chats",
+    "version": "1.0",
+    "description": "Save your favorite chats in ChatGPT.",
+    "permissions": ["storage"],
+    "host_permissions": ["https://chat.openai.com/*"],
+    "content_scripts": [
+      {
+        "matches": ["https://chatgpt.com/*"],
+        "js": ["content.js"],
+        "css": ["style.css"]
+      }
+    ]
+  }
+  
