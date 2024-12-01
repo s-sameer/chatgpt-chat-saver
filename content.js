@@ -11,7 +11,6 @@ const observer = new MutationObserver(() => {
         savedChatsButton.innerHTML = `${saveIcon} Saved Chats`;
         savedChatsButton.className = 'text-sm grow overflow-hidden text-ellipsis whitespace-nowrap text-token-text-primary';
 
-        // Add hover effect
         savedChatsButton.addEventListener('mouseenter', () => {
             savedChatsButton.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
         });
@@ -34,8 +33,10 @@ const observer = new MutationObserver(() => {
         });
 
         // Append the button and list before the next sibling of the sidebar
-        sidebar.parentNode.insertBefore(savedChatsButton, sidebar.nextSibling);
+        sidebar.insertAdjacentElement('afterend', savedChatsButton);
         sidebar.parentNode.insertBefore(savedChatsList, savedChatsButton.nextSibling);
+
+        loadSavedChats();
     }
 
     const chatItems = document.querySelectorAll('li[data-testid^="history-item-"]');
@@ -84,16 +85,52 @@ const observer = new MutationObserver(() => {
                 const clonedChat = chatItem.cloneNode(true);
                 clonedChat.querySelector('.save-icon-wrapper').addEventListener('click', (e) => {
                     e.stopPropagation(); 
-                    clonedChat.remove(); 
+                    clonedChat.remove();
+                    removeChatFromLocalStorage(anchorTag.href);
                 });
                 savedChatsList.appendChild(clonedChat);
+                saveChatToLocalStorage(clonedChat);
             }
         });
 
-        // Add save icon wrapper to the chat item
         chatItem.style.position = 'relative';
         chatItem.appendChild(saveIconWrapper);
     });
 });
 
 observer.observe(document.body, { childList: true, subtree: true });
+
+//save chat to local storage
+function saveChatToLocalStorage(chat) {
+    let savedChats = JSON.parse(localStorage.getItem('savedChats')) || {};
+    link = chat.querySelector('a').href
+    savedChats[link] = chat.outerHTML;
+    localStorage.setItem('savedChats', JSON.stringify(savedChats));
+}
+
+//load saved chats from local storage
+function loadSavedChats() {
+    let savedChats = JSON.parse(localStorage.getItem('savedChats')) || {};
+    const savedChatsList = document.getElementById('saved-chats-list');
+    Object.entries(savedChats).forEach(([href, chatHTML]) => {
+        const tempContainer = document.createElement('div');
+        tempContainer.innerHTML = chatHTML;
+        const chatItem = tempContainer.firstElementChild;
+
+        chatItem.querySelector('.save-icon-wrapper').addEventListener('click', (e) => {
+            e.stopPropagation();
+            chatItem.remove();
+            removeChatFromLocalStorage(href);
+        });
+
+        savedChatsList.appendChild(chatItem);
+    });
+}
+
+function removeChatFromLocalStorage(href) {
+    let savedChats = JSON.parse(localStorage.getItem('savedChats')) || {};
+    console.log(savedChats);
+    delete savedChats[href];
+    console.log(savedChats);
+    localStorage.setItem('savedChats', JSON.stringify(savedChats));
+}
