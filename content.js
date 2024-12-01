@@ -21,15 +21,16 @@ const observer = new MutationObserver(() => {
         });
 
         // Create the list of saved chats
-        const savedChatsList = document.createElement('div');
+        const savedChatsList = document.createElement('ol');
         savedChatsList.id = 'saved-chats-list';
         savedChatsList.style.display = 'none'; // Initially hidden
         savedChatsList.style.flexDirection = 'column';
+        savedChatsList.className = 'text-sm grow overflow-hidden text-ellipsis whitespace-nowrap text-token-text-primary';
 
         // Toggle visibility of the saved chats list
         savedChatsButton.addEventListener('click', () => {
             savedChatsList.style.display =
-                savedChatsList.style.display === 'none' ? 'block' : 'none';
+                savedChatsList.style.display === 'none' ? 'flex' : 'none';
         });
 
         // Append the button and list before the next sibling of the sidebar
@@ -37,46 +38,62 @@ const observer = new MutationObserver(() => {
         sidebar.parentNode.insertBefore(savedChatsList, savedChatsButton.nextSibling);
     }
 
-     // Add hover actions to chats
-     const chatItems = document.querySelectorAll('li[data-testid^="history-item-"]'); // Adjust this selector based on your chat list structure
-     if (chatItems.length > 0){
-        observer.disconnect();
-        
-        chatItems.forEach((chatItem) => {
-            // Create the save icon
-            const saveIconWrapper = document.createElement('span');
-            saveIconWrapper.innerHTML = saveIcon;
-            saveIconWrapper.style.cursor = 'pointer';
-            saveIconWrapper.style.marginLeft = '10px';
-            saveIconWrapper.style.display = 'none'; // Hidden by default
-            saveIconWrapper.style.position = 'absolute';
-            saveIconWrapper.style.right = '15%';
-            saveIconWrapper.style.top = '50%';
-            saveIconWrapper.style.transform = 'translateY(-50%)';
-   
-            // Show the save icon on hover
-            chatItem.addEventListener('mouseenter', () => {
-                saveIconWrapper.style.display = 'block';
-            });
-   
-            // Hide the save icon when the mouse leaves
-            chatItem.addEventListener('mouseleave', () => {
-                saveIconWrapper.style.display = 'none';
-            });
-   
-            // Handle save icon click
-            saveIconWrapper.addEventListener('click', () => {
-                const clonedChat = chatItem.cloneNode(true);
-                clonedChat.querySelector('span').remove(); // Remove duplicate save icon
-                savedChatsList.appendChild(clonedChat); // Add to saved chats
-            });
-   
-            // Add save icon wrapper to the chat item
-            chatItem.style.position = 'relative'; 
-            chatItem.appendChild(saveIconWrapper);
+    const chatItems = document.querySelectorAll('li[data-testid^="history-item-"]');
+    chatItems.forEach((chatItem) => {
+        // Skip if save icon is already added
+        if (chatItem.querySelector('.save-icon-wrapper')) {
+            return;
+        }
+
+        // Create the save icon
+        const saveIconWrapper = document.createElement('span');
+        saveIconWrapper.innerHTML = saveIcon;
+        saveIconWrapper.className = 'save-icon-wrapper';
+        saveIconWrapper.style.cursor = 'pointer';
+        saveIconWrapper.style.marginLeft = '10px';
+        saveIconWrapper.style.display = 'none'; // Hidden by default
+        saveIconWrapper.style.position = 'absolute';
+        saveIconWrapper.style.right = '15%';
+        saveIconWrapper.style.top = '50%';
+        saveIconWrapper.style.transform = 'translateY(-50%)';
+
+        // Show the save icon on hover
+        chatItem.addEventListener('mouseenter', () => {
+            saveIconWrapper.style.display = 'block';
         });
-     }
+
+        // Hide the save icon when the mouse leaves
+        chatItem.addEventListener('mouseleave', () => {
+            saveIconWrapper.style.display = 'none';
+        });
+
+        // Handle save icon click
+        saveIconWrapper.addEventListener('click', (event) => {
+            let isSaved = false;
+            const savedChatsList = document.getElementById('saved-chats-list');
+            const savedItems = savedChatsList.querySelectorAll('li');
+            const anchorTag = chatItem.querySelector('a');
+            savedItems.forEach((item) => {
+                if (item.querySelector('a').href === anchorTag.href) {
+                    isSaved = true;
+                }
+            });
+
+            if (!isSaved) {
+                // Save the chat
+                const clonedChat = chatItem.cloneNode(true);
+                clonedChat.querySelector('.save-icon-wrapper').addEventListener('click', (e) => {
+                    e.stopPropagation(); 
+                    clonedChat.remove(); 
+                });
+                savedChatsList.appendChild(clonedChat);
+            }
+        });
+
+        // Add save icon wrapper to the chat item
+        chatItem.style.position = 'relative';
+        chatItem.appendChild(saveIconWrapper);
+    });
 });
 
 observer.observe(document.body, { childList: true, subtree: true });
-

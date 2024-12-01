@@ -15,6 +15,6 @@
 
 #saved-chats-list {
   margin-top: 5px;
-  padding-left: 5px;
+  list-style-type: none;
 }
 
