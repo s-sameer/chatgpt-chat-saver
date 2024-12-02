@@ -104,8 +104,6 @@ function saveChat(chatItem, href, savedChatsList) {
 function saveChatToLocalStorage(href, chatHTML) {
     let savedChats = JSON.parse(localStorage.getItem('savedChats')) || {};
     savedChats[href] = chatHTML.outerHTML;
-    console.log(chatHTML.outerHTML);
-    console.log(chatHTML.innerHTML);
     localStorage.setItem('savedChats', JSON.stringify(savedChats));
 }
 
@@ -130,9 +128,7 @@ function loadSavedChats() {
 
 function removeChatFromLocalStorage(href) {
     let savedChats = JSON.parse(localStorage.getItem('savedChats')) || {};
-    console.log(savedChats);
     delete savedChats[href];
-    console.log(savedChats);
     localStorage.setItem('savedChats', JSON.stringify(savedChats));
 }
 
