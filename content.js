@@ -88,8 +88,10 @@ function attachSaveIconClickEvent(chatItem, saveIconWrapper) {
 function saveChat(chatItem, href, savedChatsList) {
     const clonedChat = chatItem.cloneNode(true);
     clonedChat.querySelector('div.bg-token-sidebar-surface-secondary')?.classList?.remove('bg-token-sidebar-surface-secondary')?.add('hover:bg-token-sidebar-surface-secondary');
+    clonedChat.querySelector('a').querySelector('div').querySelector('div')?.remove();
 
     const clonedSaveIconWrapper = clonedChat.querySelector('.save-icon-wrapper');
+    clonedSaveIconWrapper.style.right = '4%';
 
     clonedSaveIconWrapper.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -98,7 +100,7 @@ function saveChat(chatItem, href, savedChatsList) {
     });
 
     savedChatsList.appendChild(clonedChat);
-    saveChatToLocalStorage(href, chatItem);
+    saveChatToLocalStorage(href, clonedChat);
 }
 
 function saveChatToLocalStorage(href, chatHTML) {
