@@ -1,4 +1,3 @@
-// Wait for the sidebar to load
 const observer = new MutationObserver(() => {
     const sidebar = document.querySelector('nav div.bg-token-sidebar-surface-primary')
     const saveIcon = `
@@ -6,7 +5,6 @@ const observer = new MutationObserver(() => {
     `;
     
     if (sidebar && !document.querySelector('#saved-chats-button')) {
-        // Add "Saved chats" button
         createSavedChatsButton(sidebar, saveIcon);
         createSavedChatsList();
         loadSavedChats();
@@ -107,7 +105,6 @@ function saveChatToLocalStorage(href, chatHTML) {
     localStorage.setItem('savedChats', JSON.stringify(savedChats));
 }
 
-//load saved chats from local storage
 function loadSavedChats() {
     let savedChats = JSON.parse(localStorage.getItem('savedChats')) || {};
     const savedChatsList = document.getElementById('saved-chats-list');
