@@ -45,8 +45,6 @@ function createSavedChatsButton(sidebar) {
 function createSavedChatsList() {
     const savedChatsList = document.createElement('ol');
     savedChatsList.id = 'saved-chats-list';
-    savedChatsList.style.display = 'none';
-    savedChatsList.style.flexDirection = 'column';
     savedChatsList.className = 'text-sm grow overflow-hidden text-ellipsis whitespace-nowrap text-token-text-primary';
 
     const savedChatsButton = document.getElementById('saved-chats-button');
@@ -55,26 +53,9 @@ function createSavedChatsList() {
 
 function createSaveIconWrapper() {
     const saveIconWrapper = document.createElement('span');
-    saveIconWrapper.innerHTML = saveIcon;
     saveIconWrapper.className = 'save-icon-wrapper';
-    saveIconWrapper.style.cursor = 'pointer';
-    saveIconWrapper.style.marginLeft = '10px';
-    saveIconWrapper.style.display = 'none'; // Hidden by default
-    saveIconWrapper.style.position = 'absolute';
-    saveIconWrapper.style.right = '15%';
-    saveIconWrapper.style.top = '50%';
-    saveIconWrapper.style.transform = 'translateY(-50%)';
+    saveIconWrapper.innerHTML = saveIcon;
     return saveIconWrapper;
-}
-
-function attachHoverEvents(chatItem, saveIconWrapper) {
-    chatItem.addEventListener('mouseenter', () => {
-        saveIconWrapper.style.display = 'block';
-    });
-
-    chatItem.addEventListener('mouseleave', () => {
-        saveIconWrapper.style.display = 'none';
-    });
 }
 
 function attachSaveIconClickEvent(chatItem, saveIconWrapper) {
@@ -176,7 +157,6 @@ function addSaveIconsToChatItems() {
         if (chatItem.querySelector('.save-icon-wrapper')) return;
 
         const saveIconWrapper = createSaveIconWrapper(saveIcon);
-        attachHoverEvents(chatItem, saveIconWrapper);
         attachSaveIconClickEvent(chatItem, saveIconWrapper);
 
         chatItem.style.position = 'relative';

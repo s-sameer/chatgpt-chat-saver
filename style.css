@@ -18,3 +18,27 @@
   list-style-type: none;
 }
 
+#saved-chats-list li .save-icon-wrapper {
+  display: block;
+}
+
+#saved-chats-list ol {
+  display: none;
+  flex-direction: column;
+}
+
+/* Add these new styles */
+.save-icon-wrapper {
+  cursor: pointer;
+  margin-left: 10px;
+  display: none;
+  position: absolute;
+  right: 15%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Show the save icon when hovering over the chat item */
+li[data-testid^="history-item-"]:hover .save-icon-wrapper {
+  display: block;
+}
