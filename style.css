@@ -22,11 +22,6 @@
   display: block;
 }
 
-#saved-chats-list ol {
-  display: none;
-  flex-direction: column;
-}
-
 /* Add these new styles */
 .save-icon-wrapper {
   cursor: pointer;

@@ -45,6 +45,8 @@ function createSavedChatsButton(sidebar) {
 function createSavedChatsList() {
     const savedChatsList = document.createElement('ol');
     savedChatsList.id = 'saved-chats-list';
+    savedChatsList.style.display = 'none';
+    savedChatsList.style.flexDirection = 'column';
     savedChatsList.className = 'text-sm grow overflow-hidden text-ellipsis whitespace-nowrap text-token-text-primary';
 
     const savedChatsButton = document.getElementById('saved-chats-button');
@@ -65,11 +67,10 @@ function attachSaveIconClickEvent(chatItem, saveIconWrapper) {
         const isSaved = isChatSaved(anchorTag);
 
         if (!isSaved) {
-            saveChat(chatItem, anchorTag.href, savedChatsList);
             saveIconWrapper.innerHTML = saveIconGreen;
+            saveChat(chatItem, anchorTag.href, savedChatsList);
         } else {
             removeSavedChat(anchorTag.href, savedChatsList);
-            saveIconWrapper.innerHTML = saveIcon;
         }
     });
 }
