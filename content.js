@@ -86,7 +86,10 @@ function attachSaveIconClickEvent(chatItem, saveIconWrapper) {
         if (!isSaved) {
             saveChat(chatItem, anchorTag.href, savedChatsList);
             saveIconWrapper.innerHTML = saveIconGreen;
-        } 
+        } else {
+            removeSavedChat(anchorTag.href, savedChatsList);
+            saveIconWrapper.innerHTML = saveIcon;
+        }
     });
 }
 
@@ -106,7 +109,7 @@ function resetChatState(href){
 
 function saveChat(chatItem, href, savedChatsList) {
     const clonedChat = cloneChatItem(chatItem);
-    setupClonedSaveIcon(clonedChat, href);
+    setupClonedSaveIcon(clonedChat, href, savedChatsList);
     savedChatsList.appendChild(clonedChat);
     saveChatToLocalStorage(href, clonedChat);
 }
@@ -118,14 +121,11 @@ function cloneChatItem(chatItem) {
     return clonedChat;
 }
 
-function setupClonedSaveIcon(clonedChat, href) {
+function setupClonedSaveIcon(clonedChat, href, savedChatsList) {
     const clonedSaveIconWrapper = clonedChat.querySelector('.save-icon-wrapper');
     clonedSaveIconWrapper.style.right = '3%';
     clonedSaveIconWrapper.addEventListener('click', (e) => {
-        e.stopPropagation();
-        clonedChat.remove();
-        removeChatFromLocalStorage(href);
-        resetChatState(href);
+        removeSavedChat(href, savedChatsList);
     });
 }
 
@@ -144,10 +144,7 @@ function loadSavedChats() {
         const chatItem = tempContainer.firstElementChild;
 
         chatItem.querySelector('.save-icon-wrapper').addEventListener('click', (e) => {
-            e.stopPropagation();
-            chatItem.remove();
-            removeChatFromLocalStorage(href);
-            resetChatState(href);
+            removeSavedChat(href, savedChatsList);
         });
 
         savedChatsList.appendChild(chatItem);
@@ -158,6 +155,18 @@ function removeChatFromLocalStorage(href) {
     let savedChats = JSON.parse(localStorage.getItem('savedChats')) || {};
     delete savedChats[href];
     localStorage.setItem('savedChats', JSON.stringify(savedChats));
+}
+
+function removeSavedChat(href, savedChatsList){
+    const savedChatItem = Array.from(savedChatsList.querySelectorAll('li')).find(item =>
+        item.querySelector('a')?.href === href
+    );
+
+    if (savedChatItem) {
+        savedChatItem.remove(); 
+        removeChatFromLocalStorage(href); 
+        resetChatState(href);
+    }
 }
 
 function addSaveIconsToChatItems() {
