@@ -98,7 +98,10 @@ function saveChat(chatItem, href, savedChatsList) {
 
 function cloneChatItem(chatItem) {
     const clonedChat = chatItem.cloneNode(true);
-    clonedChat.querySelector('div.bg-token-sidebar-surface-secondary')?.classList?.remove('bg-token-sidebar-surface-secondary')?.add('hover:bg-token-sidebar-surface-secondary');
+    const targetDiv = clonedChat.querySelector('div'); 
+    if (targetDiv) {
+        targetDiv.style.setProperty('--item-background-color', 'var(--sidebar-surface-primary)');
+    }
     clonedChat.querySelector('a div div')?.remove();
     return clonedChat;
 }
