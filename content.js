@@ -80,7 +80,7 @@ function isChatSaved(anchorTag) {
     return anchorTag && savedChats[anchorTag.href];
 }
 
-function resetChatState(href){
+function resetChatState(href) {
     const relativeHref = href.replace(window.location.origin, '');
     const originalChatItem = document.querySelector(`li[data-testid^="history-item-"] a[href="${relativeHref}"]`)?.closest('li');
     if (originalChatItem) {
@@ -98,7 +98,7 @@ function saveChat(chatItem, href, savedChatsList) {
 
 function cloneChatItem(chatItem) {
     const clonedChat = chatItem.cloneNode(true);
-    const targetDiv = clonedChat.querySelector('div'); 
+    const targetDiv = clonedChat.querySelector('div');
     if (targetDiv) {
         targetDiv.style.setProperty('--item-background-color', 'var(--sidebar-surface-primary)');
     }
@@ -142,7 +142,7 @@ function removeChatFromLocalStorage(href) {
     localStorage.setItem('savedChats', JSON.stringify(savedChats));
 }
 
-function removeSavedChat(href, savedChatsList){
+function removeSavedChat(href, savedChatsList) {
     const savedChatItem = Array.from(savedChatsList.querySelectorAll('li')).find(item =>
         item.querySelector('a')?.href === href
     );
@@ -168,7 +168,7 @@ function addSaveIconsToChatItems() {
 
         const anchorTag = chatItem.querySelector('a');
         if (isChatSaved(anchorTag)) {
-            saveIconWrapper.innerHTML = saveIconGreen; 
+            saveIconWrapper.innerHTML = saveIconGreen;
         }
     });
 }
