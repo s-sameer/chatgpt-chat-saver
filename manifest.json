@@ -10,7 +10,6 @@
         "128": "icons/icon128.png"
     },
     "permissions": ["storage"],
-    "host_permissions": ["https://chat.openai.com/*"],
     "content_scripts": [
       {
         "matches": ["https://chatgpt.com/*"],
