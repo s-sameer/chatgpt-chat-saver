@@ -1,6 +1,6 @@
 # ChatGPT Saved Chats
 
-Do you use ChatGPT regularly and wish you could save your most important conversations for future reference? ChatGPT Saved Chats is here to help!
+Do you use ChatGPT regularly and wish you could save your most important conversations for future reference? [ChatGPT Saved Chats](chromewebstore.google.com/detail/chatgpt-saved-chats/aonhnhcglgpnpopfghdplgcdkhchkkcg) is here to help!
 
 This extension enhances your ChatGPT experience by allowing you to:
 * Save your most important chats: Keep a record of your conversations that you can revisit anytime through the sidebar.
