@@ -4,6 +4,7 @@ const saveIcon = `
 const saveIconGreen = `
     <svg viewBox="0 0 24 24" version="1.1" height="20" width="20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#1cba86"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>Saved</title> <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Education" transform="translate(-96.000000, -48.000000)" fill-rule="nonzero"> <g id="bookmark_fill" transform="translate(96.000000, 48.000000)"> <path d="M24,0 L24,24 L0,24 L0,0 L24,0 Z M12.5934901,23.257841 L12.5819402,23.2595131 L12.5108777,23.2950439 L12.4918791,23.2987469 L12.4918791,23.2987469 L12.4767152,23.2950439 L12.4056548,23.2595131 C12.3958229,23.2563662 12.3870493,23.2590235 12.3821421,23.2649074 L12.3780323,23.275831 L12.360941,23.7031097 L12.3658947,23.7234994 L12.3769048,23.7357139 L12.4804777,23.8096931 L12.4953491,23.8136134 L12.4953491,23.8136134 L12.5071152,23.8096931 L12.6106902,23.7357139 L12.6232938,23.7196733 L12.6232938,23.7196733 L12.6266527,23.7031097 L12.609561,23.275831 C12.6075724,23.2657013 12.6010112,23.2592993 12.5934901,23.257841 L12.5934901,23.257841 Z M12.8583906,23.1452862 L12.8445485,23.1473072 L12.6598443,23.2396597 L12.6498822,23.2499052 L12.6498822,23.2499052 L12.6471943,23.2611114 L12.6650943,23.6906389 L12.6699349,23.7034178 L12.6699349,23.7034178 L12.678386,23.7104931 L12.8793402,23.8032389 C12.8914285,23.8068999 12.9022333,23.8029875 12.9078286,23.7952264 L12.9118235,23.7811639 L12.8776777,23.1665331 C12.8752882,23.1545897 12.8674102,23.1470016 12.8583906,23.1452862 L12.8583906,23.1452862 Z M12.1430473,23.1473072 C12.1332178,23.1423925 12.1221763,23.1452606 12.1156365,23.1525954 L12.1099173,23.1665331 L12.0757714,23.7811639 C12.0751323,23.7926639 12.0828099,23.8018602 12.0926481,23.8045676 L12.108256,23.8032389 L12.3092106,23.7104931 L12.3186497,23.7024347 L12.3186497,23.7024347 L12.3225043,23.6906389 L12.340401,23.2611114 L12.337245,23.2485176 L12.337245,23.2485176 L12.3277531,23.2396597 L12.1430473,23.1473072 Z" id="MingCute" fill-rule="nonzero"> </path> <path d="M4,5 C4,3.34315 5.34315,2 7,2 L17,2 C18.6569,2 20,3.34315 20,5 L20,21.0284 C20,22.2485 18.6209,22.9581 17.6281,22.249 L12,18.2289 L6.37186,22.249 C5.37906,22.9581 4,22.2485 4,21.0284 L4,5 Z" id="路径" fill="#1cba86"> </path> </g> </g> </g> </g></svg>
 `;
+const deleteIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>`;
 
 const observer = new MutationObserver(() => {
     const sidebar = document.querySelector('nav a[title="ChatGPT"]')?.closest('div');
@@ -143,6 +144,37 @@ function removeChatFromLocalStorage(href) {
 }
 
 function removeSavedChat(href, savedChatsList) {
+    const div = document.createElement('div');
+    div.className = 'alert-overlay';
+    div.innerHTML = `
+      <div class="dialog-wrapper scale p-2 dark:bg-gray-800 bg-gray-50">
+        <div class="flex items-center pb-2 border-b border-gray-200 dark:border-gray-700 gap-2 mb-2">
+          <span class="del-btn">${deleteIcon}</span>
+          <p class="text-gray-200 font-semibold text-lg">Are you sure?</p>
+        </div>
+        <span class="text-sm leading-[25px] text-gray-600 dark:text-gray-400">Do you really want to delete this saved chats? This process can't be undone.</span>
+        <div class="flex mt-4 items-center gap-1.5 justify-end">
+          <button class="action-btn" id="close-btn">Close</button>
+          <button class="action-btn" id="delete-btn">Delete</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(div);
+  
+    const alertOverlay = document.querySelector('.alert-overlay');
+    const wrapper = document.querySelector('.dialog-wrapper');
+    const closeButton = document.querySelector('#close-btn');
+  
+    closeButton.addEventListener('click', () => alertOverlay.remove());
+    alertOverlay.addEventListener('click', e => {
+        if (e.target.classList.contains('alert-overlay') && !(e.target.classList.contains('dialog-wrapper'))) {
+          wrapper.classList.remove("scale");
+          wrapper.classList.add('shake');
+          setTimeout(() => wrapper.classList.remove('shake'), 500);
+        }
+      });
+      // - delete the saved chat
+    document.getElementById('delete-btn').addEventListener('click', () => {
     const savedChatItem = Array.from(savedChatsList.querySelectorAll('li')).find(item =>
         item.querySelector('a')?.href === href
     );
@@ -151,7 +183,9 @@ function removeSavedChat(href, savedChatsList) {
         savedChatItem.remove(); 
         removeChatFromLocalStorage(href); 
         resetChatState(href);
+        document.querySelector('.alert-overlay').remove();
     }
+});
 }
 
 function addSaveIconsToChatItems() {
