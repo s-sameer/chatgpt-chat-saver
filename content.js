@@ -148,8 +148,8 @@ function removeSavedChat(href, savedChatsList) {
     );
 
     if (savedChatItem) {
-        savedChatItem.remove(); 
-        removeChatFromLocalStorage(href); 
+        savedChatItem.remove();
+        removeChatFromLocalStorage(href);
         resetChatState(href);
     }
 }
