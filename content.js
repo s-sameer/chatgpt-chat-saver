@@ -6,7 +6,7 @@ const saveIconGreen = `
 `;
 
 const observer = new MutationObserver(() => {
-    const sidebar = document.querySelector('nav a[title="ChatGPT"]')?.closest('div');
+    const sidebar = document.querySelector('nav a[title="ChatGPT"]')?.closest('span');
 
     if (sidebar && !document.querySelector('#saved-chats-button')) {
         createSavedChatsButton(sidebar);
