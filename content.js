@@ -48,11 +48,11 @@ function createSavedChatsButton(sidebar) {
 }
 
 function createSavedChatsList() {
-    const savedChatsList = document.createElement('ol');
+    const savedChatsList = document.createElement('div');
     savedChatsList.id = 'saved-chats-list';
     savedChatsList.style.display = 'none';
     savedChatsList.style.flexDirection = 'column';
-    savedChatsList.className = 'text-sm grow overflow-hidden text-ellipsis whitespace-nowrap text-token-text-primary';
+    savedChatsList.className = 'mx-[3px] last:mb-5 mt-5 text-primary overflow-hidden';
 
     const savedChatsButton = document.getElementById('saved-chats-button');
     savedChatsButton.insertAdjacentElement('afterend', savedChatsList);
@@ -88,11 +88,15 @@ function isChatSaved(anchorTag) {
 }
 
 function resetChatState(href) {
+    // Use both absolute and relative href to ensure we find the chat item
     const relativeHref = href.replace(window.location.origin, '');
-    const originalChatItem = document.querySelector(`li[data-testid^="history-item-"] a[href="${relativeHref}"]`)?.closest('li');
+    const originalChatItem = document.querySelector(`aside a[href="${relativeHref}"]`);
+    
     if (originalChatItem) {
         const originalSaveIconWrapper = originalChatItem.querySelector('.save-icon-wrapper');
-        originalSaveIconWrapper.innerHTML = saveIcon; // Reset to default icon
+        if (originalSaveIconWrapper) {
+            originalSaveIconWrapper.innerHTML = saveIcon; // Reset to default icon
+        }
     }
 }
 
@@ -105,11 +109,6 @@ function saveChat(chatItem, href, savedChatsList) {
 
 function cloneChatItem(chatItem) {
     const clonedChat = chatItem.cloneNode(true);
-    const targetDiv = clonedChat.querySelector('div');
-    if (targetDiv) {
-        targetDiv.style.setProperty('--item-background-color', 'var(--sidebar-surface-primary)');
-    }
-    clonedChat.querySelector('a div div')?.remove();
     return clonedChat;
 }
 
@@ -117,8 +116,14 @@ function setupClonedSaveIcon(clonedChat, href, savedChatsList) {
     const clonedSaveIconWrapper = clonedChat.querySelector('.save-icon-wrapper');
     clonedSaveIconWrapper.style.right = '3%';
     clonedSaveIconWrapper.addEventListener('click', (e) => {
+        e.preventDefault();
         removeSavedChat(href, savedChatsList);
     });
+
+    const button = clonedChat.querySelector('button');
+    if (button) {
+        button.style.display = 'none'; // Hide the button in the saved chat
+    }
 }
 
 function saveChatToLocalStorage(href, chatHTML) {
@@ -136,6 +141,7 @@ function loadSavedChats() {
         const chatItem = tempContainer.firstElementChild;
 
         chatItem.querySelector('.save-icon-wrapper').addEventListener('click', (e) => {
+            e.preventDefault();
             removeSavedChat(href, savedChatsList);
         });
 
@@ -150,13 +156,18 @@ function removeChatFromLocalStorage(href) {
 }
 
 function removeSavedChat(href, savedChatsList) {
-    const savedChatItem = Array.from(savedChatsList.querySelectorAll('li')).find(item =>
-        item.querySelector('a')?.href === href
-    );
+    // Find the saved chat item in the saved chats list
+    const savedChatItem = Array.from(savedChatsList.children).find(item => {
+        // The item itself is the anchor, no need to search for nested anchors
+        return item.href === href || item.getAttribute('href') === href;
+    });
 
     if (savedChatItem) {
+        // Remove it from the saved chats list and local storage
         savedChatItem.remove();
         removeChatFromLocalStorage(href);
+        
+        // Reset the original chat item's icon if it exists
         resetChatState(href);
     }
 }
