@@ -6,7 +6,7 @@ const saveIconGreen = `
 `;
 
 const observer = new MutationObserver(() => {
-    const sidebar = document.querySelector('[data-testid="sidebar-item-library"]');
+    const sidebar = document.querySelector('nav a[href="/library"]');
 
     if (sidebar && !document.querySelector('#saved-chats-button')) {
         createSavedChatsButton(sidebar);
@@ -44,6 +44,7 @@ function createSavedChatsButton(sidebar) {
             savedChatsList.style.display === 'none' ? 'flex' : 'none';
     });
 
+    // Insert the saved chats button after the sidebar item
     sidebar.insertAdjacentElement('afterend', savedChatsButton);
 }
 
@@ -109,6 +110,8 @@ function saveChat(chatItem, href, savedChatsList) {
 
 function cloneChatItem(chatItem) {
     const clonedChat = chatItem.cloneNode(true);
+    // Remove data-active attribute if it exists
+    clonedChat.removeAttribute('data-active');
     return clonedChat;
 }
 
