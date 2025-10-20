@@ -177,7 +177,7 @@ function removeSavedChat(href, savedChatsList) {
 
 function addSaveIconsToChatItems() {
     // Find all chat items
-    const chatItems = document.querySelectorAll('aside a[href^="/c/"]');
+    const chatItems = document.querySelectorAll('div a[href^="/c/"]');
     if (chatItems.length === 0) return;
 
     chatItems.forEach((chatItem) => {
