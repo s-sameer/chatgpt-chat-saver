@@ -91,7 +91,7 @@ function isChatSaved(anchorTag) {
 function resetChatState(href) {
     // Use both absolute and relative href to ensure we find the chat item
     const relativeHref = href.replace(window.location.origin, '');
-    const originalChatItem = document.querySelector(`aside a[href="${relativeHref}"]`);
+    const originalChatItem = document.querySelector(`div a[href="${relativeHref}"]`);
     
     if (originalChatItem) {
         const originalSaveIconWrapper = originalChatItem.querySelector('.save-icon-wrapper');
