@@ -25,18 +25,27 @@ Download ChatGPT Saved Chats now and start saving your favorite conversations to
 
 ![4](screenshots/4.jpg)
 
-# How it works (high level)
+## Core Logic
 
-1. A MutationObserver watches the page for the ChatGPT sidebar. When the sidebar is present, the extension injects:
-   - A "Saved Chats" button (toggles the saved list).
-   - A hidden saved-chats list where cloned chat items are added.
-2. The script scans the sidebar chat items and appends a save icon to each. The icon is shown on hover.
-3. Clicking a save icon:
-   - Clones the chat item into the saved list.
-   - Marks the icon as saved (green) and stores the cloned HTML in localStorage under a key derived from the chat's href.
-4. Clicking the save icon in the saved list or clicking the icon again removes the saved item from the list and from localStorage, and resets the original sidebar icon back to the default state.
-5. On startup the extension loads saved entries from localStorage and populates the Saved Chats list.
+The extension operates by injecting a script (`content.js`) into the ChatGPT interface. Here's how it works under the hood:
 
+1.  **MutationObserver**: A `MutationObserver` is set up to watch for changes in the DOM. This is crucial because ChatGPT is a Single Page Application (SPA) where content is loaded dynamically. The observer waits for the sidebar to appear before injecting the "Saved Chats" button and list.
+2.  **Chat Identification**: The script scans the sidebar for anchor tags (`<a>`) that link to specific chats (href starting with `/c/`). It appends a save icon to each of these items.
+3.  **Cloning & Storage**: When a user clicks the save icon:
+    -   The chat item's DOM element is cloned using `cloneNode(true)`.
+    -   The cloned element is sanitized (e.g., removing active states) and added to the hidden "Saved Chats" list.
+    -   The HTML of the cloned element is serialized and stored in the browser's `localStorage` using the chat's URL as the key.
+4.  **Persistence**: On page load, the extension reads from `localStorage` and reconstructs the "Saved Chats" list, ensuring your saved conversations persist across sessions.
+
+## Development
+
+To make changes to the extension:
+
+1.  Edit the files (e.g., `content.js`, `style.css`) in your favorite code editor.
+2.  Go back to `chrome://extensions`.
+3.  Find **ChatGPT Saved Chats** in the list.
+4.  Click the **Reload** icon (circular arrow) on the extension card.
+5.  Refresh the ChatGPT page to see your changes.
 
 ## Privacy Policy
 **ChatGPT Saved Chats** does not collect, store, or transmit any personal data to external servers. All saved chats remain local to the user's browser storage and are not shared with the developer or any third party.
