@@ -6,7 +6,7 @@ const saveIconGreen = `
 `;
 
 const observer = new MutationObserver(() => {
-    const sidebar = document.querySelector('nav a[href="/library"]');
+    const sidebar = document.querySelector('nav a[href="/images"]');
 
     if (sidebar && !document.querySelector('#saved-chats-button')) {
         createSavedChatsButton(sidebar);
@@ -53,7 +53,7 @@ function createSavedChatsList() {
     savedChatsList.id = 'saved-chats-list';
     savedChatsList.style.display = 'none';
     savedChatsList.style.flexDirection = 'column';
-    savedChatsList.className = 'mx-[3px] last:mb-5 mt-5 text-primary overflow-hidden';
+    savedChatsList.className = 'mx-[3px] last:mb-5 mt-5 text-primary';
 
     const savedChatsButton = document.getElementById('saved-chats-button');
     savedChatsButton.insertAdjacentElement('afterend', savedChatsList);
