@@ -6,7 +6,7 @@ const saveIconGreen = `
 `;
 
 const observer = new MutationObserver(() => {
-    const sidebar = document.querySelector('nav a[href="/images"]');
+    const sidebar = document.querySelector('nav a[href="/codex/cloud"]');
 
     if (sidebar && !document.querySelector('#saved-chats-button')) {
         createSavedChatsButton(sidebar);
@@ -92,7 +92,7 @@ function resetChatState(href) {
     // Use both absolute and relative href to ensure we find the chat item
     const relativeHref = href.replace(window.location.origin, '');
     const originalChatItem = document.querySelector(`div a[href="${relativeHref}"]`);
-    
+
     if (originalChatItem) {
         const originalSaveIconWrapper = originalChatItem.querySelector('.save-icon-wrapper');
         if (originalSaveIconWrapper) {
@@ -169,7 +169,7 @@ function removeSavedChat(href, savedChatsList) {
         // Remove it from the saved chats list and local storage
         savedChatItem.remove();
         removeChatFromLocalStorage(href);
-        
+
         // Reset the original chat item's icon if it exists
         resetChatState(href);
     }
