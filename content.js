@@ -6,7 +6,7 @@ const saveIconGreen = `
 `;
 
 const observer = new MutationObserver(() => {
-    const sidebar = document.querySelector('nav a[href="/codex/cloud"]');
+    const sidebar = document.querySelector('nav a[href="/codex"]');
 
     if (sidebar && !document.querySelector('#saved-chats-button')) {
         createSavedChatsButton(sidebar);
